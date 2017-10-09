@@ -16,7 +16,7 @@ public final class Version: Command {
     }
 
     public func run(arguments: [String]) throws {
-        console.print("Vapor Cloud deploy: ", newLine: false)
+        console.print("Version: ", newLine: false)
         console.success("\(version)")
     }
 }
