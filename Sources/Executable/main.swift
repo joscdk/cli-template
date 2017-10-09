@@ -16,7 +16,6 @@ guard let executable = iterator.next() else {
 do {
     try terminal.run(executable: executable, commands: [
         TestCommand(console: terminal),
-        MyCustomCommand(console: terminal),
         Version(console: terminal, version: version),
     ], arguments: Array(iterator), help: [
         "Small CLI example"
