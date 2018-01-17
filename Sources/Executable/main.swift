@@ -16,10 +16,9 @@ public struct CliCommands: CommandGroup {
             "test-command": TestCommand()
         ]
         self.options = [
-            CommandOption.value(
+            CommandOption.flag(
                 name: "version",
                 short: "v",
-                default: "",
                 help: ["Print version"]
             )
         ]
@@ -27,7 +26,7 @@ public struct CliCommands: CommandGroup {
     }
     
     public func run(using context: CommandContext) throws {
-        if let version = context.options["version"] {
+        if let _ = context.options["version"] {
             context.console.info("Vapor CLI: 0.0.0")
         }
     }
