@@ -1,42 +1,36 @@
-import libc
 import Console
-import Foundation
+import Command
 import App
 
-let version = "master"
-let arguments = CommandLine.arguments
-let terminal = Terminal(arguments: arguments)
+let terminal = Terminal()
 
-var iterator = arguments.makeIterator()
-
-guard let executable = iterator.next() else {
-    throw ConsoleError.noExecutable
+public struct CliCommands: CommandGroup {
+    public var commands: CommandGroup.Commands
+    
+    public var options: [CommandOption]
+    
+    public var help: [String]
+    
+    public init() {
+        self.commands = [
+            "test-command": TestCommand()
+        ]
+        self.options = [
+            CommandOption.value(
+                name: "version",
+                short: "v",
+                default: "",
+                help: ["Print version"]
+            )
+        ]
+        self.help = []
+    }
+    
+    public func run(using context: CommandContext) throws {
+        if let version = context.options["version"] {
+            context.console.info("Vapor CLI: 0.0.0")
+        }
+    }
 }
 
-do {
-    try terminal.run(executable: executable, commands: [
-        TestCommand(console: terminal),
-        Version(console: terminal, version: version),
-    ], arguments: Array(iterator), help: [
-        "Small CLI example"
-    ])
-
-} catch ConsoleError.insufficientArguments {
-    terminal.error("Error: ", newLine: false)
-    terminal.print("Insufficient arguments.")
-} catch ConsoleError.help {
-    exit(0)
-} catch ConsoleError.cancelled {
-    print("Cancelled")
-    exit(2)
-} catch ConsoleError.noCommand {
-    terminal.error("Error: ", newLine: false)
-    terminal.print("No command supplied.")
-} catch ConsoleError.commandNotFound(let id) {
-    terminal.error("Error: ", newLine: false)
-    terminal.print("Command \"\(id)\" not found.")
-} catch {
-    terminal.error("Error: ", newLine: false)
-    terminal.print("\(error)")
-    exit(1)
-}
+try terminal.run(CliCommands(), input: &.commandLine)

@@ -1,21 +1,38 @@
 import Console
+import Command
 import Foundation
 
 public final class TestCommand: Command {
-    public let id = "test-command"
+    /// See Command.arguments
+    public let arguments: [CommandArgument]
     
-    public let help: [String] = [
-        "Example of a CLI command"
-    ]
+    /// See Command.options
+    public let options: [CommandOption]
     
-    public let console: ConsoleProtocol
-    
-    public init(console: ConsoleProtocol) {
-        self.console = console
+    /// See Command.help
+    public var help: [String]
+
+    public init() {
+        arguments = []
+        options = [
+            CommandOption.value(
+                name: "test",
+                short: "t",
+                default: nil,
+                help: ["Test option"]
+            )
+        ]
+        help = [
+            "Test command"
+        ]
     }
     
-    public func run(arguments: [String]) throws {
-        console.info("It works 🎉")
+    public func run(using context: CommandContext) throws {
+        context.console.info("It works 🎉")
+        
+        if let test = context.options["test"] {
+            context.console.info(test)
+        }
     }
 }
 

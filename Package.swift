@@ -8,15 +8,28 @@ let package = Package(
         .executable(name: "Executable", targets: ["Executable"])
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/console.git", .upToNextMajor(from: "2.2.0")),
+        // Swift Promises, Futures, and Streams.
+        .package(url: "https://github.com/vapor/async.git", .branch("beta")),
+        
+        // Swift wrapper for Console I/O.
+        .package(url: "https://github.com/vapor/console.git", .branch("beta")),
+        
+        // Core extensions, type-aliases, and functions that facilitate common tasks.
+        .package(url: "https://github.com/vapor/core.git", .branch("beta")),
+        
+        // Cryptography modules
+        .package(url: "https://github.com/vapor/crypto.git", .branch("beta")),
+        
+        // Non-blocking networking for Swift (HTTP and WebSockets).
+        .package(url: "https://github.com/vapor/engine.git", .branch("beta")),
     ],
     targets: [
-        .target(name: "App", dependencies: ["Console"],
+        .target(name: "App", dependencies: ["Console", "Command"],
                 exclude: [
                     "Config",
                     "Public",
                     "Resources",
                 ]),
-        .target(name: "Executable", dependencies: ["App"]),
+        .target(name: "Executable", dependencies: ["Console", "App"]),
     ]
 )
